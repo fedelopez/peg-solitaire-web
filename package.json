@@ -2,7 +2,8 @@
   "name": "peg-solitaire",
   "version": "1.0.0",
   "scripts": {
-    "start": "browser-sync start -s -f index.html src --no-ui --no-notify",
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "jest"
   },
   "license": "MIT",
