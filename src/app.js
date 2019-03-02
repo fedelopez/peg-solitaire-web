@@ -22,7 +22,14 @@ d3.selectAll('circle').each(function () {
     })
 });
 
-
+d3.select('button').on('click', function () {
+    const observable = board.solve();
+    const next = (state) => console.log('Next state: ' + state);
+    const error = () => {
+    };
+    const complete = () => console.log('Complete!');
+    observable.subscribe(next, error, complete);
+});
 
 
 

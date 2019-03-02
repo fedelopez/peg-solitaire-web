@@ -1,4 +1,4 @@
-const {pegBetween} = require('./board');
+const {pegBetween, nextStates} = require('./board');
 
 describe('calculates peg between origin and target', () => {
     test('when origin x is target x and origin y > target y', () => {
@@ -19,5 +19,123 @@ describe('calculates peg between origin and target', () => {
     test('when origin y is target y and origin x < target x', () => {
         const pegCoordinates = pegBetween(0, 2, 2, 2);
         expect(pegCoordinates).toEqual({column: 1, row: 2});
+    });
+
+    describe('when only two pegs remain', function () {
+        test('returns two states for a left to right or right to left movement', () => {
+            const expected1 = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'peg', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const expected2 = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['peg', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'peg', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const neighbors = nextStates(board);
+            expect(neighbors).toHaveLength(2);
+            expect(neighbors).toContainEqual(expected1);
+            expect(neighbors).toContainEqual(expected2);
+        });
+
+        test('returns one state for a up to down', () => {
+            const expected = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const neighbors = nextStates(board);
+            expect(neighbors).toHaveLength(1);
+            expect(neighbors).toContainEqual(expected);
+        });
+
+        test('returns one state for a down to up', () => {
+            const expected = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const neighbors = nextStates(board);
+            expect(neighbors).toHaveLength(1);
+            expect(neighbors).toContainEqual(expected);
+        });
+
+        test('returns two states for the same peg', () => {
+            const expected1 = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'peg', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'peg'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const expected2 = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'peg', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'peg'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'peg', 'peg'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'peg'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const neighbors = nextStates(board);
+            expect(neighbors).toHaveLength(2);
+            expect(neighbors).toContainEqual(expected1);
+            expect(neighbors).toContainEqual(expected2);
+        });
     });
 });

@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {Observable} from "rxjs";
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
@@ -41,6 +42,54 @@ export function renderBoard() {
             }
         }, '')
     }, '');
+}
+
+export function solve() {
+    return new Observable(subscriber => {
+        const board = createBoard();
+        const neighbors = nextStates(board);
+    });
+}
+
+export function nextStates(board) {
+    const states = [];
+    const rows = board.length;
+    for (let row = 0; row < rows; row++) {
+        const columns = board[row].length;
+        for (let column = 0; column < columns; column++) {
+            if (board[row][column] === 'peg') {
+                if (column < columns - 2 && board[row][column + 1] === 'peg' && board[row][column + 2] === 'empty') {
+                    const newState = board.map(row => row.slice());
+                    newState[row][column] = 'empty';
+                    newState[row][column + 1] = 'empty';
+                    newState[row][column + 2] = 'peg';
+                    states.push(newState);
+                }
+                if (column > 1 && board[row][column - 1] === 'peg' && board[row][column - 2] === 'empty') {
+                    const newState = board.map(row => row.slice());
+                    newState[row][column] = 'empty';
+                    newState[row][column - 1] = 'empty';
+                    newState[row][column - 2] = 'peg';
+                    states.push(newState);
+                }
+                if (row < rows - 2 && board[row + 1][column] === 'peg' && board[row + 2][column] === 'empty') {
+                    const newState = board.map(row => row.slice());
+                    newState[row][column] = 'empty';
+                    newState[row + 1][column] = 'empty';
+                    newState[row + 2][column] = 'peg';
+                    states.push(newState);
+                }
+                if (row > 2 && board[row - 1][column] === 'peg' && board[row - 2][column] === 'empty') {
+                    const newState = board.map(row => row.slice());
+                    newState[row][column] = 'empty';
+                    newState[row - 1][column] = 'empty';
+                    newState[row - 2][column] = 'peg';
+                    states.push(newState);
+                }
+            }
+        }
+    }
+    return states;
 }
 
 function createBoard() {

@@ -2,13 +2,13 @@
   "name": "peg-solitaire",
   "version": "1.0.0",
   "scripts": {
-    "start": "browser-sync start -s -f index.html src --no-ui --no-notify",
+    "start": "parcel index.html",
     "test": "jest"
   },
   "license": "MIT",
   "dependencies": {
     "d3": "^5.7.0",
-    "rxjs": "^6.3.3"
+    "rxjs": "^6.4.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -16,6 +16,7 @@
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.26.3",
     "jest": "^23.6.0",
+    "parcel": "^1.11.0",
     "regenerator-runtime": "^0.13.1"
   }
 }
