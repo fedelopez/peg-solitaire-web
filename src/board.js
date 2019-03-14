@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import {Observable} from "rxjs";
+import R from "ramda";
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
@@ -18,7 +19,6 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
     } else {
         throw Error(`Could not find peg`);
     }
-    peg.className = getPegClass(`circle[row="${peg.row}"][column="${peg.column}"]`);
     return peg;
 }
 
@@ -33,6 +33,10 @@ export function setPegClass(selector, hole) {
     d3.select(selector).attr('class', hole);
 }
 
+export function getPegClass(selector) {
+    return d3.select(selector).attr('class');
+}
+
 export function renderBoard() {
     return createBoard().reduce((acc, values, row) => {
         return acc + values.reduce((acc2, value, column) => {
@@ -44,11 +48,38 @@ export function renderBoard() {
     }, '');
 }
 
-export function solve() {
+export function solveObservables(board = createBoard()) {
     return new Observable(subscriber => {
-        const board = createBoard();
         const neighbors = nextStates(board);
+
     });
+}
+
+function hasOnePegLeft(flattenedBoard) {
+    const emptySlotCount = R.reduce((acc, val) => val === "peg" ? acc + 1 : acc, 0, flattenedBoard);
+    return emptySlotCount === 1;
+}
+
+function doSolve(frontier, visitedBoards) {
+    const currentPath = R.head(frontier);
+    const board = R.last(currentPath);
+    const flattenedBoard = R.flatten(board);
+    if (hasOnePegLeft(flattenedBoard)) {
+        return currentPath;
+    } else {
+        if (visitedBoards.indexOf(flattenedBoard) < 0) {
+            const neighbors = nextStates(board);
+            const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
+            const tail = R.tail(frontier);
+            return doSolve(R.concat(newPaths, tail), R.prepend(flattenedBoard, visitedBoards));
+        } else {
+            return doSolve(R.tail(frontier), visitedBoards);
+        }
+    }
+}
+
+export function solve(board = createBoard()) {
+    return doSolve([[board]], []);
 }
 
 export function nextStates(board) {
@@ -102,8 +133,4 @@ function createBoard() {
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
     ];
-}
-
-function getPegClass(selector) {
-    return d3.select(selector).attr('class');
 }

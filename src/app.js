@@ -13,6 +13,7 @@ d3.selectAll('circle').each(function () {
         } else if (peg.className === 'empty') {
             const originPeg = board.getPeg(`circle[class="selected"]`);
             const pegBetween = board.pegBetween(originPeg.column, originPeg.row, peg.column, peg.row);
+            pegBetween.className = board.getPegClass(`circle[row="${pegBetween.row}"][column="${pegBetween.column}"]`);
             if (originPeg.className === 'selected' && pegBetween.className === 'peg') {
                 board.setPegClass(`circle[class="selected"]`, 'empty');
                 board.setPegClass(`circle[column="${pegBetween.column}"][row="${pegBetween.row}"]`, 'empty');
