@@ -1,5 +1,3 @@
-import * as d3 from 'd3';
-import {Observable} from "rxjs";
 import R from "ramda";
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
@@ -20,39 +18,6 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
         throw Error(`Could not find peg`);
     }
     return peg;
-}
-
-export function getPeg(selector) {
-    const className = d3.select(selector).attr('class');
-    const column = Number(d3.select(selector).attr('column'));
-    const row = Number(d3.select(selector).attr('row'));
-    return {column, row, className};
-}
-
-export function setPegClass(selector, hole) {
-    d3.select(selector).attr('class', hole);
-}
-
-export function getPegClass(selector) {
-    return d3.select(selector).attr('class');
-}
-
-export function renderBoard() {
-    return createBoard().reduce((acc, values, row) => {
-        return acc + values.reduce((acc2, value, column) => {
-            if (!value) return acc2;
-            else {
-                return acc2 + `<circle column=${column} row="${row}" cx="${25 + 50 * column}" cy="${25 + 50 * row}" class=${value}></circle>`
-            }
-        }, '')
-    }, '');
-}
-
-export function solveObservables(board = createBoard()) {
-    return new Observable(subscriber => {
-        const neighbors = nextStates(board);
-
-    });
 }
 
 function hasOnePegLeft(flattenedBoard) {
@@ -123,7 +88,7 @@ export function nextStates(board) {
     return states;
 }
 
-function createBoard() {
+export function createBoard() {
     return [
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],

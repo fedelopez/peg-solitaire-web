@@ -1,37 +1,66 @@
 import * as d3 from 'd3';
 import * as board from './board';
 
-d3.select('svg').html(board.renderBoard());
+d3.select('svg').html(renderBoard());
 
 d3.selectAll('circle').each(function () {
     d3.select(this).on('click', function () {
-        const peg = board.getPeg(this);
+        const peg = getPeg(this);
         console.log(`Peg ${peg.className} column=${peg.column}, row=${peg.row} clicked`);
         if (peg.className === 'peg') {
-            board.setPegClass(`circle[class="selected"]`, 'peg');
-            board.setPegClass(this, 'selected');
+            setPegClass('circle[class="selected"]', 'peg');
+            setPegClass(this, 'selected');
         } else if (peg.className === 'empty') {
-            const originPeg = board.getPeg(`circle[class="selected"]`);
+            const originPeg = getPeg('circle[class="selected"]');
             const pegBetween = board.pegBetween(originPeg.column, originPeg.row, peg.column, peg.row);
-            pegBetween.className = board.getPegClass(`circle[row="${pegBetween.row}"][column="${pegBetween.column}"]`);
+            pegBetween.className = getPegClass(`circle[row="${pegBetween.row}"][column="${pegBetween.column}"]`);
             if (originPeg.className === 'selected' && pegBetween.className === 'peg') {
-                board.setPegClass(`circle[class="selected"]`, 'empty');
-                board.setPegClass(`circle[column="${pegBetween.column}"][row="${pegBetween.row}"]`, 'empty');
-                board.setPegClass(this, 'peg');
+                setPegClass(`circle[class="selected"]`, 'empty');
+                setPegClass(`circle[column="${pegBetween.column}"][row="${pegBetween.row}"]`, 'empty');
+                setPegClass(this, 'peg');
             }
         }
     })
 });
 
 d3.select('button').on('click', function () {
-    const observable = board.solve();
-    const next = (state) => console.log('Next state: ' + state);
-    const error = () => {
-    };
-    const complete = () => console.log('Complete!');
-    observable.subscribe(next, error, complete);
+    const newBoard = board.createBoard();
+    const allPegs = d3.selectAll('circle')
+        .each(function () {
+            console.log('Peg', getPeg(this));
+            const peg = getPeg(this);
+            newBoard[peg.row][peg.column] = peg.className;
+        });
+    console.log('newBoard', newBoard);
+    const solution = board.solve(newBoard);
+    console.log('End!', solution);
 });
 
+function renderBoard() {
+    return board.createBoard().reduce((acc, values, row) => {
+        return acc + values.reduce((acc2, value, column) => {
+            if (!value) return acc2;
+            else {
+                return acc2 + `<circle column=${column} row="${row}" cx="${25 + 50 * column}" cy="${25 + 50 * row}" class=${value}></circle>`
+            }
+        }, '')
+    }, '');
+}
+
+function getPeg(selector) {
+    const className = d3.select(selector).attr('class');
+    const column = Number(d3.select(selector).attr('column'));
+    const row = Number(d3.select(selector).attr('row'));
+    return {column, row, className};
+}
+
+function setPegClass(selector, hole) {
+    d3.select(selector).attr('class', hole);
+}
+
+function getPegClass(selector) {
+    return d3.select(selector).attr('class');
+}
 
 
 
