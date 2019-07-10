@@ -1,4 +1,4 @@
-import R from "ramda";
+import * as R from "ramda";
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
@@ -14,8 +14,6 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
         } else if (originCol - 2 === targetCol) {
             peg = {column: originCol - 1, row: originRow};
         }
-    } else {
-        throw Error(`Could not find peg`);
     }
     return peg;
 }
@@ -25,26 +23,36 @@ function hasOnePegLeft(flattenedBoard) {
     return emptySlotCount === 1;
 }
 
-function doSolve(frontier, visitedBoards) {
-    const currentPath = R.head(frontier);
-    const board = R.last(currentPath);
-    const flattenedBoard = R.flatten(board);
-    if (hasOnePegLeft(flattenedBoard)) {
-        return currentPath;
-    } else {
-        if (visitedBoards.indexOf(flattenedBoard) < 0) {
-            const neighbors = nextStates(board);
-            const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
-            const tail = R.tail(frontier);
-            return doSolve(R.concat(newPaths, tail), R.prepend(flattenedBoard, visitedBoards));
+export function solve(board = createBoard()) {
+    let frontier = [[board]];
+    let visitedBoards = [];
+    let visitedCount = 0;
+    let deadEnds = 0;
+    while (frontier.length > 0) {
+        if (visitedCount % 10000 === 0) {
+            console.log(`Visited boards: ${visitedCount}, dead ends: ${deadEnds}.`);
+        }
+        const currentPath = R.head(frontier);
+        const board = R.last(currentPath);
+        const flattenedBoard = R.flatten(board);
+        if (hasOnePegLeft(flattenedBoard)) {
+            return currentPath;
         } else {
-            return doSolve(R.tail(frontier), visitedBoards);
+            if (visitedBoards.indexOf(flattenedBoard) < 0) {
+                const neighbors = nextStates(board);
+                if (neighbors.length === 0) {
+                    deadEnds++
+                }
+                const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
+                const tail = R.tail(frontier);
+                frontier = R.concat(newPaths, tail);
+                visitedBoards = R.prepend(flattenedBoard, visitedBoards);
+                visitedCount++;
+            } else {
+                frontier = R.tail(frontier);
+            }
         }
     }
-}
-
-export function solve(board = createBoard()) {
-    return doSolve([[board]], []);
 }
 
 export function nextStates(board) {
@@ -97,5 +105,17 @@ export function createBoard() {
         ['peg', 'peg', 'peg', 'peg', 'peg', 'peg', 'peg'],
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+    ];
+}
+
+export function halfwayThereBoard() {
+    return [
+        [undefined, undefined, 'peg', 'peg', 'empty', undefined, undefined],
+        [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],
+        ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
+        ['peg', 'peg', 'empty', 'peg', 'empty', 'peg', 'peg'],
+        ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+        [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+        [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
     ];
 }

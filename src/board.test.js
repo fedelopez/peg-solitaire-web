@@ -168,5 +168,28 @@ describe('board', () => {
             expect(boardStates).toContainEqual(expected);
         });
 
+        it('should solve the board when is halfway done', () => {
+            const board = [
+                [undefined, undefined, 'peg', 'peg', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],
+                ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
+                ['peg', 'peg', 'empty', 'peg', 'empty', 'peg', 'peg'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const expected = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'peg', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const boardStates = solve(board);
+            expect(boardStates).toHaveLength(15);
+            expect(boardStates).toContainEqual(expected);
+        });
     });
 });
