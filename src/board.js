@@ -108,7 +108,7 @@ export function createBoard() {
     ];
 }
 
-export function halfwayThereBoard() {
+export function partiallySolvedBoard() {
     return [
         [undefined, undefined, 'peg', 'peg', 'empty', undefined, undefined],
         [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],

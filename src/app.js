@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as board from './board';
 
-d3.select('svg').html(renderBoard());
+d3.select('svg').html(renderBoard(board.partiallySolvedBoard()));
 
 d3.selectAll('circle').each(function () {
     d3.select(this).on('click', function () {
@@ -26,7 +26,7 @@ d3.selectAll('circle').each(function () {
 });
 
 d3.select('button').on('click', function () {
-    const newBoard = board.halfwayThereBoard();
+    const newBoard = board.partiallySolvedBoard();
     d3.selectAll('circle')
         .each(function () {
             console.log('Peg', getPeg(this));
@@ -35,11 +35,14 @@ d3.select('button').on('click', function () {
         });
     console.log('newBoard', newBoard);
     const solution = board.solve(newBoard);
-    console.log('End!', solution);
+    if (solution.length > 1) {
+        d3.select('svg').html(renderBoard(solution[1]));
+        console.log('End!', solution);
+    }
 });
 
-function renderBoard() {
-    return board.halfwayThereBoard().reduce((acc, values, row) => {
+function renderBoard(board) {
+    return board.reduce((acc, values, row) => {
         return acc + values.reduce((acc2, value, column) => {
             if (!value) return acc2;
             else {
