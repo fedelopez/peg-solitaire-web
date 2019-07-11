@@ -2,14 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Peg Solitaire</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" type="text/css" href="src/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 </head>
 <body>
-<h1>Peg Solitaire</h1>
-<svg width="355" height="355"></svg>
-<h2>Score: <span>0</span></h2>
-<button>Hint</button>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-full">
+                <h1>Peg Solitaire</h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-one-fifth">
+                <h2>Score: <span>0</span></h2>
+            </div>
+            <div class="column">
+                <svg width="355" height="355"></svg>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <a class="button is-normal">Hint</a>
+            </div>
+        </div>
+    </div>
+</section>
 <script src="src/app.js"></script>
 </body>
 </html>

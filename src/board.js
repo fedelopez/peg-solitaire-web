@@ -110,10 +110,10 @@ export function createBoard() {
 
 export function partiallySolvedBoard() {
     return [
-        [undefined, undefined, 'peg', 'peg', 'empty', undefined, undefined],
+        [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
         [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],
         ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
-        ['peg', 'peg', 'empty', 'peg', 'empty', 'peg', 'peg'],
+        ['peg', 'peg', 'empty', 'peg', 'peg', 'peg', 'peg'],
         ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],

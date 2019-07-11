@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'atari_font_full_versionRg';
+    src: url('assets/atari_full-webfont.woff2') format('woff2'),
+    url('assets/atari_full-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, h2, a {
+    font-family: 'atari_font_full_versionRg', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+}

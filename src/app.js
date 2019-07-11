@@ -25,7 +25,7 @@ d3.selectAll('circle').each(function () {
     })
 });
 
-d3.select('button').on('click', function () {
+d3.select('a.button').on('click', function () {
     const newBoard = board.partiallySolvedBoard();
     d3.selectAll('circle')
         .each(function () {
