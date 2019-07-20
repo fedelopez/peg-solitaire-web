@@ -1,4 +1,5 @@
 import * as R from "ramda";
+import SortedSet from "collections/sorted-set";
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
@@ -18,41 +19,46 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
     return peg;
 }
 
-function hasOnePegLeft(flattenedBoard) {
-    const emptySlotCount = R.reduce((acc, val) => val === "peg" ? acc + 1 : acc, 0, flattenedBoard);
-    return emptySlotCount === 1;
+function pegsCount(flattenedBoard) {
+    return R.reduce((acc, val) => val === "p" ? acc + 1 : acc, 0, flattenedBoard);
 }
 
 export function solve(board = createBoard()) {
     let frontier = [[board]];
-    let visitedBoards = [];
-    let visitedCount = 0;
+    let visitedBoards = SortedSet();
     let deadEnds = 0;
+    let totalPegs = pegsCount(flatten(board));
     while (frontier.length > 0) {
-        if (visitedCount % 10000 === 0) {
-            console.log(`Visited boards: ${visitedCount}, dead ends: ${deadEnds}.`);
-        }
-        const currentPath = R.head(frontier);
-        const board = R.last(currentPath);
-        const flattenedBoard = R.flatten(board);
-        if (hasOnePegLeft(flattenedBoard)) {
+        const currentPath = frontier.shift();
+        const board = currentPath[currentPath.length - 1];
+        const flattenedBoard = flatten(board);
+        visitedBoards.push(flattenedBoard);
+        const pegsLeft = pegsCount(flattenedBoard);
+        if (pegsLeft === 1) {
             return currentPath;
         } else {
-            if (visitedBoards.indexOf(flattenedBoard) < 0) {
-                const neighbors = nextStates(board);
-                if (neighbors.length === 0) {
-                    deadEnds++
-                }
-                const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
-                const tail = R.tail(frontier);
-                frontier = R.concat(newPaths, tail);
-                visitedBoards = R.prepend(flattenedBoard, visitedBoards);
-                visitedCount++;
-            } else {
-                frontier = R.tail(frontier);
+            if (pegsLeft < totalPegs) {
+                totalPegs = pegsLeft;
+                console.log(`Pegs remaining: ${pegsLeft}`)
             }
+            const nextBoardStates = nextStates(board);
+            const neighbors = nextBoardStates.filter(state => !visitedBoards.has(flatten(state)));
+            if (neighbors.length === 0) {
+                deadEnds++
+            }
+            const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
+            frontier.unshift(...newPaths);
         }
     }
+}
+
+function flatten(board) {
+    const res = board.flatMap(column => column.map(row => {
+        if (row === 'peg') return 'p';
+        if (row === 'empty') return 'e';
+        else return 'u';
+    }));
+    return res.join('');
 }
 
 export function nextStates(board) {
@@ -108,13 +114,25 @@ export function createBoard() {
     ];
 }
 
-export function partiallySolvedBoard() {
+export function boardWith17MovementsLeft() {
     return [
         [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
         [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],
         ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
         ['peg', 'peg', 'empty', 'peg', 'peg', 'peg', 'peg'],
         ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+        [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+        [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+    ];
+}
+
+export function boardWith20MovementsLeft() {
+    return [
+        [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+        [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+        ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
+        ['peg', 'peg', 'empty', 'peg', 'peg', 'peg', 'peg'],
+        ['peg', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
     ];
