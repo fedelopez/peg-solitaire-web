@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as board from './board';
 
-d3.select('svg').html(renderBoard(board.boardWith20MovementsLeft()));
+d3.select('svg').html(renderBoard(board.createBoard()));
 
 d3.selectAll('circle').each(function () {
     d3.select(this).on('click', function () {
