@@ -26,18 +26,20 @@ d3.selectAll('circle').each(function () {
 });
 
 d3.select('a.button').on('click', function () {
-    const newBoard = board.boardWith20MovementsLeft();
+    const gameBoard = board.createBoard();
     d3.selectAll('circle')
         .each(function () {
-            console.log('Peg', getPeg(this));
             const peg = getPeg(this);
-            newBoard[peg.row][peg.column] = peg.className;
+            console.log('Peg', peg);
+            gameBoard[peg.row][peg.column] = peg.className;
         });
-    console.log('newBoard', newBoard);
-    const solution = board.solve(newBoard);
+    console.log('Board', gameBoard);
+    const solution = board.solve(gameBoard);
     if (solution.length > 1) {
         d3.select('svg').html(renderBoard(solution[1]));
         console.log('End!', solution);
+    } else {
+        console.log('No solution for this board!')
     }
 });
 

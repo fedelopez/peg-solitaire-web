@@ -198,4 +198,20 @@ describe('board', () => {
             expect(boardStates).toContainEqual(expected);
         });
     });
+
+    describe('dead-ends', () => {
+        it('should return empty array when there are no movements left', () => {
+            const board = [
+                [null, null, 'peg', 'empty', 'empty', null, null],
+                [null, null, 'empty', 'empty', 'empty', null, null],
+                ['peg', 'empty', 'empty', 'empty', 'peg', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'peg', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'empty', 'empty', 'empty', 'empty', 'peg'],
+                [null, null, 'empty', "empty", 'empty', null, null],
+                [null, null, 'empty', "empty", 'empty', null, null],
+            ];
+            const boardStates = solve(board);
+            expect(boardStates).toHaveLength(0);
+        });
+    });
 });

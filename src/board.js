@@ -30,8 +30,8 @@ export function solve(board = createBoard()) {
     let totalPegs = pegsCount(flatten(board));
     while (frontier.length > 0) {
         const currentPath = frontier.shift();
-        const board = currentPath[currentPath.length - 1];
-        const flattenedBoard = flatten(board);
+        const currentBoard = currentPath[currentPath.length - 1];
+        const flattenedBoard = flatten(currentBoard);
         visitedBoards.push(flattenedBoard);
         const pegsLeft = pegsCount(flattenedBoard);
         if (pegsLeft === 1) {
@@ -41,7 +41,7 @@ export function solve(board = createBoard()) {
                 totalPegs = pegsLeft;
                 console.log(`Pegs remaining: ${pegsLeft}`)
             }
-            const nextBoardStates = nextStates(board);
+            const nextBoardStates = nextStates(currentBoard);
             const neighbors = nextBoardStates.filter(state => !visitedBoards.has(flatten(state)));
             if (neighbors.length === 0) {
                 deadEnds++
@@ -50,6 +50,8 @@ export function solve(board = createBoard()) {
             frontier.unshift(...newPaths);
         }
     }
+    console.log(`Board can't be solved. Dead ends: ${deadEnds}`);
+    return [];
 }
 
 function flatten(board) {
