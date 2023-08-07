@@ -37,7 +37,7 @@ d3.select('a.button').on('click', function () {
     const solution = board.solve(gameBoard);
     if (solution.length > 1) {
         d3.select('svg').html(renderBoard(solution[1]));
-        console.log('End!', solution);
+        console.log('Hint applied', solution);
     } else {
         console.log('No solution for this board!')
     }

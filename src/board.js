@@ -1,5 +1,5 @@
-import * as R from "ramda";
-import SortedSet from "collections/sorted-set";
+import * as R from 'ramda';
+import SortedSet from 'collections/sorted-set';
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
