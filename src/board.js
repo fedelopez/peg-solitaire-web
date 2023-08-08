@@ -39,15 +39,16 @@ export function solve(board = createBoard()) {
         } else {
             if (pegsLeft < totalPegs) {
                 totalPegs = pegsLeft;
-                console.log(`Pegs remaining: ${pegsLeft}`)
+                console.log(`Pegs remaining: ${pegsLeft}`);
             }
             const nextBoardStates = nextStates(currentBoard);
-            const neighbors = nextBoardStates.filter(state => !visitedBoards.has(flatten(state)));
-            if (neighbors.length === 0) {
-                deadEnds++
+            if (nextBoardStates.length === 0) {
+                deadEnds++;
+            } else {
+                const neighbors = nextBoardStates.filter(state => !visitedBoards.has(flatten(state)));
+                const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
+                frontier.unshift(...newPaths);
             }
-            const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
-            frontier.unshift(...newPaths);
         }
     }
     console.log(`Board can't be solved. Dead ends: ${deadEnds}`);
