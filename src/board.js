@@ -19,20 +19,16 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
     return peg;
 }
 
-function pegsCount(flattenedBoard) {
-    return R.reduce((acc, val) => val === "p" ? acc + 1 : acc, 0, flattenedBoard);
-}
-
 export function solve(board = createBoard()) {
-    let frontier = [[board]];
-    let visitedBoards = SortedSet();
+    const frontier = [[board]];
+    const visitedBoards = SortedSet();
     let deadEnds = 0;
     let totalPegs = pegsCount(flatten(board));
     while (frontier.length > 0) {
         const currentPath = frontier.shift();
         const currentBoard = currentPath[currentPath.length - 1];
         const flattenedBoard = flatten(currentBoard);
-        visitedBoards.push(flattenedBoard);
+        visitedBoards.add(flattenedBoard);
         const pegsLeft = pegsCount(flattenedBoard);
         if (pegsLeft === 1) {
             return currentPath;
@@ -53,15 +49,6 @@ export function solve(board = createBoard()) {
     }
     console.log(`Board can't be solved. Dead ends: ${deadEnds}`);
     return [];
-}
-
-function flatten(board) {
-    const res = board.flatMap(column => column.map(row => {
-        if (row === 'peg') return 'p';
-        if (row === 'empty') return 'e';
-        else return 'u';
-    }));
-    return res.join('');
 }
 
 export function nextStates(board) {
@@ -139,4 +126,17 @@ export function boardWith20MovementsLeft() {
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
         [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
     ];
+}
+
+function pegsCount(flattenedBoard) {
+    return R.reduce((acc, val) => val === "p" ? acc + 1 : acc, 0, flattenedBoard);
+}
+
+function flatten(board) {
+    const res = board.flatMap(column => column.map(row => {
+        if (row === 'peg') return 'p';
+        if (row === 'empty') return 'e';
+        else return 'u';
+    }));
+    return res.join('');
 }

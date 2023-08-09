@@ -1,10 +1,11 @@
-import * as d3 from 'd3';
-import * as board from './board';
+import {select, selectAll} from 'd3-selection';
+import {transition} from 'd3-transition';
+import {easeBounceIn, easeLinear} from 'd3-ease';
+import * as Board from './board';
 
-d3.select('svg').html(renderBoard(board.createBoard()));
-
-d3.selectAll('circle').each(function () {
-    d3.select(this).on('click', function () {
+function init(board) {
+    select('svg').html(renderBoard(board));
+    selectAll('circle').on('click', function () {
         const peg = getPeg(this);
         console.log(`Peg ${peg.className} column=${peg.column}, row=${peg.row} clicked`);
         if (peg.className === 'peg') {
@@ -12,7 +13,7 @@ d3.selectAll('circle').each(function () {
             setPegClass(this, 'selected');
         } else if (peg.className === 'empty') {
             const originPeg = getPeg('circle[class="selected"]');
-            const pegBetween = board.pegBetween(originPeg.column, originPeg.row, peg.column, peg.row);
+            const pegBetween = Board.pegBetween(originPeg.column, originPeg.row, peg.column, peg.row);
             if (pegBetween) {
                 pegBetween.className = getPegClass(`circle[row="${pegBetween.row}"][column="${pegBetween.column}"]`);
                 if (originPeg.className === 'selected' && pegBetween.className === 'peg') {
@@ -22,24 +23,32 @@ d3.selectAll('circle').each(function () {
                 }
             }
         }
-    })
-});
+    });
+}
 
-d3.select('a.button').on('click', function () {
-    const gameBoard = board.createBoard();
-    d3.selectAll('circle')
+init(Board.createBoard());
+
+select('#hint-btn').on('click', function () {
+    const board = Board.createBoard();
+    selectAll('circle')
         .each(function () {
             const peg = getPeg(this);
             console.log('Peg', peg);
-            gameBoard[peg.row][peg.column] = peg.className;
+            board[peg.row][peg.column] = peg.className;
         });
-    console.log('Board', gameBoard);
-    const solution = board.solve(gameBoard);
+    console.log('Board', board);
+    const solution = Board.solve(board);
     if (solution.length > 1) {
-        d3.select('svg').html(renderBoard(solution[1]));
-        console.log('Hint applied', solution);
+        init(solution[1]);
+        console.log('Hint applied!', solution);
+        const t1 = transition().duration(1500).ease(easeBounceIn);
+        const t2 = transition().duration(500).ease(easeLinear);
+        select('#hint-label').html('Hint applied!').transition(t1).style("opacity", 1).transition(t2).style("opacity", 0);
     } else {
-        console.log('No solution for this board!')
+        console.log('No solution for this board!');
+        const t1 = transition().duration(1500).ease(easeBounceIn);
+        select('#hint-label').html('No solution for this board!').transition(t1).style('opacity', 1);
+        select('svg').style('pointer-events', 'none');
     }
 });
 
@@ -55,18 +64,18 @@ function renderBoard(board) {
 }
 
 function getPeg(selector) {
-    const className = d3.select(selector).attr('class');
-    const column = Number(d3.select(selector).attr('column'));
-    const row = Number(d3.select(selector).attr('row'));
+    const className = select(selector).attr('class');
+    const column = Number(select(selector).attr('column'));
+    const row = Number(select(selector).attr('row'));
     return {column, row, className};
 }
 
 function setPegClass(selector, hole) {
-    d3.select(selector).attr('class', hole);
+    select(selector).attr('class', hole);
 }
 
 function getPegClass(selector) {
-    return d3.select(selector).attr('class');
+    return select(selector).attr('class');
 }
 
 

@@ -6,27 +6,27 @@
     <title>Peg Solitaire</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" type="text/css" href="src/app.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
 <section class="section">
     <div class="container">
         <div class="columns">
-            <div class="column is-one-fifth">
+            <div class="column is-half">
                 <h1>Peg Solitaire</h1>
             </div>
-            <div class="column is-one-fifth">
-                <h2>Score: <span>0</span></h2>
-            </div>
         </div>
-        <div class="columns">
-            <div class="column">
+        <div class="columns is-centered">
+            <div class="column is-half">
                 <svg width="355" height="355"></svg>
             </div>
         </div>
         <div class="columns">
+            <div class="column is-one-fifth">
+                <a id="hint-btn" class="button is-one-fifth">Hint</a>
+            </div>
             <div class="column">
-                <a class="button is-normal">Hint</a>
+                <h2 id="hint-label" style="opacity: 0"></h2>
             </div>
         </div>
     </div>

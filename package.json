@@ -9,7 +9,9 @@
   "license": "MIT",
   "dependencies": {
     "collections": "^5.1.13",
-    "d3": "^7.8.5",
+    "d3-ease": "^3.0.1",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
     "ramda": "^0.29.0"
   },
   "devDependencies": {

@@ -21,3 +21,7 @@
     cursor: pointer;
     r: 20;
 }
+
+h1, h2, h3 {
+    user-select: none;
+}
