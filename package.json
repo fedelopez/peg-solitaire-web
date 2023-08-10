@@ -2,9 +2,10 @@
   "name": "peg-solitaire",
   "version": "1.0.0",
   "scripts": {
-    "build": "parcel build index.html",
     "start": "parcel index.html",
-    "test": "jest"
+    "test": "jest",
+    "build": "parcel build index.html",
+    "prepublishOnly": "rm -rf www && mkdir www && cp dist/** www"
   },
   "license": "MIT",
   "dependencies": {
