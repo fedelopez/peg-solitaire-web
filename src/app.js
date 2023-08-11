@@ -4,8 +4,8 @@ import {easeBounceIn, easeLinear} from 'd3-ease';
 import * as Board from './board';
 
 function init(board) {
-    select('svg').html(renderBoard(board));
-    selectAll('circle').on('click', function () {
+    select('#board-canvas').html(renderBoard(board));
+    selectAll('#board-canvas circle').on('click', function () {
         const peg = getPeg(this);
         console.log(`Peg ${peg.className} column=${peg.column}, row=${peg.row} clicked`);
         if (peg.className === 'peg') {

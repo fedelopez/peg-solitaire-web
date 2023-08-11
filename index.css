@@ -6,8 +6,53 @@
     font-style: normal;
 }
 
+#board {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+#board-table {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 0;
+}
+
+#board-canvas {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    z-index: 1;
+}
+
 h1, h2, a {
     font-family: 'atari_font_full_versionRg', sans-serif;
     font-weight: normal;
     font-style: normal;
+    user-select: none;
+}
+
+.peg {
+    stroke: #793F0D;
+    stroke-width: 2;
+    fill: #AC703D;
+    cursor: pointer;
+    r: 20;
+}
+
+.selected {
+    stroke: #E7B3D5;
+    stroke-width: 2;
+    fill: #DFD27C;
+    cursor: pointer;
+    r: 20;
+}
+
+.empty {
+    stroke: #141414;
+    stroke-width: 2;
+    fill: #2F4F4F;
+    cursor: pointer;
+    r: 20;
 }

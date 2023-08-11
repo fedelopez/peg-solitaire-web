@@ -5,30 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Peg Solitaire</title>
     <link rel="stylesheet" type="text/css" href="index.css">
-    <link rel="stylesheet" type="text/css" href="src/app.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
 <section class="section">
-    <div class="container">
-        <div class="columns">
-            <div class="column is-half">
-                <h1>Peg Solitaire</h1>
-            </div>
-        </div>
-        <div class="columns is-centered">
-            <div class="column is-half">
-                <svg width="355" height="355"></svg>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column is-one-fifth">
-                <a id="hint-btn" class="button is-one-fifth">Hint</a>
-            </div>
-            <div class="column">
-                <h2 id="hint-label" style="opacity: 0"></h2>
-            </div>
-        </div>
+    <div class="block">
+        <h1>Peg Solitaire</h1>
+    </div>
+    <div id="board" class="block">
+        <svg id="board-table" width="400" height="400">
+            <circle cx="196" cy="194" r="190" stroke="#332112" stroke-width="1" fill="#eee2d8"/>
+        </svg>
+        <svg id="board-canvas" width="380" height="380"></svg>
+    </div>
+    <div class="block">
+        <a id="hint-btn" class="button">Hint</a>
+        <h2 id="hint-label" style="opacity: 0"></h2>
     </div>
 </section>
 <script src="src/app.js" type="module"></script>
