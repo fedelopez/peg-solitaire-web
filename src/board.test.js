@@ -1,4 +1,4 @@
-import {pegBetween, nextStates, solve, boardWith17MovementsLeft, boardWith20MovementsLeft} from "./board";
+import {pegBetween, nextStates, solve, boardWith17MovementsLeft, boardWith20MovementsLeft, pegsCount} from "./board";
 
 describe('board', () => {
     describe('calculates peg between origin and target', () => {
@@ -212,6 +212,20 @@ describe('board', () => {
             ];
             const boardStates = solve(board);
             expect(boardStates).toHaveLength(0);
+        });
+    });
+
+    describe('pegs count', () => {
+        it('should count the number of pegs in string', () => {
+            const expected = "ppeeeeeepeeepppeee";
+            const actual = pegsCount(expected);
+            expect(actual).toBe(6);
+        });
+
+        it('should return zero when no pegs in string', () => {
+            const expected = "eeeeeeeeeeeeeeeeee";
+            const actual = pegsCount(expected);
+            expect(actual).toBe(0);
         });
     });
 });

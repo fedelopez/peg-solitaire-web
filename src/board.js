@@ -131,7 +131,7 @@ export function boardWith20MovementsLeft() {
     ];
 }
 
-function pegsCount(flattenedBoard) {
+export function pegsCount(flattenedBoard) {
     return R.reduce((acc, val) => val === "p" ? acc + 1 : acc, 0, flattenedBoard);
 }
 
