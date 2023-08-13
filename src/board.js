@@ -20,6 +20,7 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
 }
 
 export function solve(board = createBoard()) {
+    console.time('solve');
     const frontier = [[board]];
     const visitedBoards = SortedSet();
     let deadEnds = 0;
@@ -31,6 +32,7 @@ export function solve(board = createBoard()) {
         visitedBoards.add(flattenedBoard);
         const pegsLeft = pegsCount(flattenedBoard);
         if (pegsLeft === 1) {
+            console.timeEnd('solve');
             return currentPath;
         } else {
             if (pegsLeft < totalPegs) {
@@ -48,6 +50,7 @@ export function solve(board = createBoard()) {
         }
     }
     console.log(`Board can't be solved. Dead ends: ${deadEnds}`);
+    console.timeEnd('solve');
     return [];
 }
 
@@ -133,10 +136,12 @@ function pegsCount(flattenedBoard) {
 }
 
 function flatten(board) {
-    const res = board.flatMap(column => column.map(row => {
-        if (row === 'peg') return 'p';
-        if (row === 'empty') return 'e';
-        else return 'u';
-    }));
-    return res.join('');
+    let result = "";
+    for (const row of board) {
+        for (const column of row) {
+            if (column === 'peg') result = result + 'p';
+            if (column === 'empty') result = result + 'e';
+        }
+    }
+    return result;
 }
