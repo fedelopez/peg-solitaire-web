@@ -1,4 +1,5 @@
 import {pegBetween, nextStates, solve, boardWith17MovementsLeft, boardWith20MovementsLeft, pegsCount} from "./board";
+import Array from 'collections/shim-array';
 
 describe('board', () => {
     describe('calculates peg between origin and target', () => {
@@ -197,6 +198,19 @@ describe('board', () => {
             expect(boardStates).toHaveLength(20);
             expect(boardStates).toContainEqual(expected);
         });
+
+        it('tests array', () => {
+            const arr = Array();
+            let num = 12;
+            console.log(arr[num]);
+            arr[num]= num;
+            console.log(arr[num]);
+            for (const arrElement of arr) {
+                console.log(arrElement);
+            }
+        });
+
+
     });
 
     describe('dead-ends', () => {
@@ -217,13 +231,13 @@ describe('board', () => {
 
     describe('pegs count', () => {
         it('should count the number of pegs in string', () => {
-            const expected = "ppeeeeeepeeepppeee";
+            const expected = BigInt(110000001000111000);
             const actual = pegsCount(expected);
             expect(actual).toBe(6);
         });
 
         it('should return zero when no pegs in string', () => {
-            const expected = "eeeeeeeeeeeeeeeeee";
+            const expected = BigInt(0);
             const actual = pegsCount(expected);
             expect(actual).toBe(0);
         });

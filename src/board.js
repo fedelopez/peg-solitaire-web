@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import SortedSet from 'collections/sorted-set';
+import Array from 'collections/shim-array';
 
 export function pegBetween(originCol, originRow, targetCol, targetRow) {
     let peg;
@@ -22,15 +22,15 @@ export function pegBetween(originCol, originRow, targetCol, targetRow) {
 export function solve(board = createBoard()) {
     console.time('solve');
     const frontier = [[board]];
-    const visitedBoards = SortedSet();
+    const visitedBoards = Array();
     let deadEnds = 0;
-    let totalPegs = pegsCount(flatten(board));
+    let totalPegs = pegsCount(encode(board));
     while (frontier.length > 0) {
         const currentPath = frontier.shift();
         const currentBoard = currentPath[currentPath.length - 1];
-        const flattenedBoard = flatten(currentBoard);
-        visitedBoards.add(flattenedBoard);
-        const pegsLeft = pegsCount(flattenedBoard);
+        const encodedBoard = encode(currentBoard);
+        visitedBoards[encodedBoard] = encodedBoard;
+        const pegsLeft = pegsCount(encodedBoard);
         if (pegsLeft === 1) {
             console.timeEnd('solve');
             return currentPath;
@@ -43,13 +43,13 @@ export function solve(board = createBoard()) {
             if (nextBoardStates.length === 0) {
                 deadEnds++;
             } else {
-                const neighbors = nextBoardStates.filter(state => !visitedBoards.has(flatten(state)));
+                const neighbors = nextBoardStates.filter(state => visitedBoards[encode(state)] === undefined);
                 const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
                 frontier.unshift(...newPaths);
             }
         }
     }
-    console.log(`Board can't be solved. Dead ends: ${deadEnds}`);
+    console.log(`Board can't be solved. Dead-ends: ${deadEnds}`);
     console.timeEnd('solve');
     return [];
 }
@@ -131,17 +131,18 @@ export function boardWith20MovementsLeft() {
     ];
 }
 
-export function pegsCount(flattenedBoard) {
-    return R.reduce((acc, val) => val === "p" ? acc + 1 : acc, 0, flattenedBoard);
+export function pegsCount(encodedBoard) {
+    const str = encodedBoard.toString();
+    return R.reduce((acc, val) => val === "1" ? acc + 1 : acc, 0, str);
 }
 
-function flatten(board) {
+function encode(board) {
     let result = "";
     for (const row of board) {
         for (const column of row) {
-            if (column === 'peg') result = result + 'p';
-            if (column === 'empty') result = result + 'e';
+            if (column === 'peg') result = result + '1';
+            if (column === 'empty') result = result + '0';
         }
     }
-    return result;
+    return BigInt(result);
 }
