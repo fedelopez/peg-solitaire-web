@@ -37,7 +37,6 @@ export function solve(board = createBoard()) {
         } else {
             if (pegsLeft < totalPegs) {
                 totalPegs = pegsLeft;
-                console.log(`Pegs remaining: ${pegsLeft}`);
             }
             const nextBoardStates = nextStates(currentBoard);
             if (nextBoardStates.length === 0) {

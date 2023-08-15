@@ -1,11 +1,9 @@
-import {select, selectAll} from 'd3-selection';
-import {transition} from 'd3-transition';
-import {easeBounceIn, easeLinear} from 'd3-ease';
 import * as Board from './board';
+import $ from 'jquery';
 
 function init(board) {
-    select('#board-canvas').html(renderBoard(board));
-    selectAll('#board-canvas circle').on('click', function () {
+    $('#board-canvas').html(renderBoard(board));
+    $('#board-canvas circle').on('click', function () {
         const peg = getPeg(this);
         console.log(`Peg ${peg.className} column=${peg.column}, row=${peg.row} clicked`);
         if (peg.className === 'peg') {
@@ -28,27 +26,19 @@ function init(board) {
 
 init(Board.createBoard());
 
-select('#hint-btn').on('click', function () {
+$('#hint-btn').on('click', function () {
     const board = Board.createBoard();
-    selectAll('circle')
-        .each(function () {
-            const peg = getPeg(this);
-            console.log('Peg', peg);
-            board[peg.row][peg.column] = peg.className;
-        });
-    console.log('Board', board);
+    $('#board-canvas circle').each(function () {
+        const peg = getPeg(this);
+        board[peg.row][peg.column] = peg.className;
+    });
     const solution = Board.solve(board);
     if (solution.length > 1) {
         init(solution[1]);
-        console.log('Hint applied!', solution);
-        const t1 = transition().duration(1500).ease(easeBounceIn);
-        const t2 = transition().duration(500).ease(easeLinear);
-        select('#hint-label').html('Hint applied!').transition(t1).style("opacity", 1).transition(t2).style("opacity", 0);
+        console.log('Hint applied!');
     } else {
         console.log('No solution for this board!');
-        const t1 = transition().duration(1500).ease(easeBounceIn);
-        select('#hint-label').html('No solution for this board!').transition(t1).style('opacity', 1);
-        select('svg').style('pointer-events', 'none');
+        $('#hint-label').fadeIn(1500);
     }
 });
 
@@ -64,18 +54,18 @@ function renderBoard(board) {
 }
 
 function getPeg(selector) {
-    const className = select(selector).attr('class');
-    const column = Number(select(selector).attr('column'));
-    const row = Number(select(selector).attr('row'));
+    const className = $(selector).attr('class');
+    const column = Number($(selector).attr('column'));
+    const row = Number($(selector).attr('row'));
     return {column, row, className};
 }
 
 function setPegClass(selector, hole) {
-    select(selector).attr('class', hole);
+    $(selector).attr('class', hole);
 }
 
 function getPegClass(selector) {
-    return select(selector).attr('class');
+    return $(selector).attr('class');
 }
 
 

@@ -15,5 +15,9 @@ handlers:
   upload: www/(.*)
 
 skip_files:
+  - .github/
+  - .parcel-cache/
+  - .assets/
+  - .dist/
   - node_modules/
   - src/
