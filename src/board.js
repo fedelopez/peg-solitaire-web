@@ -24,7 +24,6 @@ export function solve(board = createBoard()) {
     const frontier = [[board]];
     const visitedBoards = Array();
     let deadEnds = 0;
-    let totalPegs = pegsCount(encode(board));
     while (frontier.length > 0) {
         const currentPath = frontier.shift();
         const currentBoard = currentPath[currentPath.length - 1];
@@ -35,9 +34,6 @@ export function solve(board = createBoard()) {
             console.timeEnd('solve');
             return currentPath;
         } else {
-            if (pegsLeft < totalPegs) {
-                totalPegs = pegsLeft;
-            }
             const nextBoardStates = nextStates(currentBoard);
             if (nextBoardStates.length === 0) {
                 deadEnds++;
@@ -48,7 +44,7 @@ export function solve(board = createBoard()) {
             }
         }
     }
-    console.log(`Board can't be solved. Dead-ends: ${deadEnds}`);
+    console.log(`Board can't be solved. Dead-ends: ${deadEnds}, Visited boards: ${visitedBoards.length}`);
     console.timeEnd('solve');
     return [];
 }

@@ -38,7 +38,6 @@ h1, h2, a {
     stroke-width: 2;
     fill: #AC703D;
     cursor: pointer;
-    r: 20;
 }
 
 .selected {
@@ -46,7 +45,6 @@ h1, h2, a {
     stroke-width: 2;
     fill: #DFD27C;
     cursor: pointer;
-    r: 20;
 }
 
 .empty {
@@ -54,5 +52,4 @@ h1, h2, a {
     stroke-width: 2;
     fill: #2F4F4F;
     cursor: pointer;
-    r: 20;
 }

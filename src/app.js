@@ -47,7 +47,7 @@ function renderBoard(board) {
         return acc + values.reduce((acc2, value, column) => {
             if (!value) return acc2;
             else {
-                return acc2 + `<circle column=${column} row="${row}" cx="${25 + 50 * column}" cy="${25 + 50 * row}" class=${value}></circle>`
+                return acc2 + `<circle column=${column} row="${row}" cx="${25 + 50 * column}" cy="${25 + 50 * row}" r="20" class=${value}></circle>`
             }
         }, '')
     }, '');
