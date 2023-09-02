@@ -209,8 +209,6 @@ describe('board', () => {
                 console.log(arrElement);
             }
         });
-
-
     });
 
     describe('dead-ends', () => {
@@ -231,13 +229,13 @@ describe('board', () => {
 
     describe('pegs count', () => {
         it('should count the number of pegs in string', () => {
-            const expected = BigInt(110000001000111000);
+            const expected = parseInt('110000001000111000', 2);
             const actual = pegsCount(expected);
             expect(actual).toBe(6);
         });
 
         it('should return zero when no pegs in string', () => {
-            const expected = BigInt(0);
+            const expected = parseInt('000000000000000000');
             const actual = pegsCount(expected);
             expect(actual).toBe(0);
         });

@@ -31,6 +31,7 @@ export function solve(board = createBoard()) {
         visitedBoards[encodedBoard] = encodedBoard;
         const pegsLeft = pegsCount(encodedBoard);
         if (pegsLeft === 1) {
+            console.log(`Board solved. Dead-ends: ${deadEnds}, Visited boards: ${visitedBoards.length}`);
             console.timeEnd('solve');
             return currentPath;
         } else {
@@ -127,7 +128,7 @@ export function boardWith20MovementsLeft() {
 }
 
 export function pegsCount(encodedBoard) {
-    const str = encodedBoard.toString();
+    const str = Number(encodedBoard).toString(2);
     return R.reduce((acc, val) => val === "1" ? acc + 1 : acc, 0, str);
 }
 
@@ -139,5 +140,5 @@ function encode(board) {
             if (column === 'empty') result = result + '0';
         }
     }
-    return BigInt(result);
+    return parseInt(result, 2);
 }
