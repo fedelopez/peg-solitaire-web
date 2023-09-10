@@ -11,8 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "collections": "^5.1.13",
-    "jquery": "^3.7.0",
-    "ramda": "^0.29.0"
+    "jquery": "^3.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",

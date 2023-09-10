@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import Array from 'collections/shim-array';
 
 export class PegBoard {
@@ -89,7 +88,7 @@ export class PegBoard {
                     deadEnds++;
                 } else {
                     const neighbors = nextBoardStates.filter(state => !cache.hasVisited(state));
-                    const newPaths = neighbors.map(neighbor => R.append(neighbor, currentPath));
+                    const newPaths = neighbors.map(neighbor => currentPath.concat(neighbor));
                     frontier.unshift(...newPaths);
                 }
             }
