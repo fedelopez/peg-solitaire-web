@@ -1,4 +1,4 @@
-import {PegBoard} from './PegBoard';
+import {PegBoard} from './pegBoard';
 import $ from 'jquery';
 
 function init(board) {
