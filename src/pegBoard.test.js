@@ -1,25 +1,24 @@
-import {pegBetween, nextStates, solve, boardWith17MovementsLeft, boardWith20MovementsLeft, pegsCount} from "./board";
-import Array from 'collections/shim-array';
+import {PegBoard} from './pegBoard';
 
-describe('board', () => {
+describe('pegBoard', () => {
     describe('calculates peg between origin and target', () => {
         it('when origin x is target x and origin y > target y', () => {
-            const pegCoordinates = pegBetween(2, 4, 2, 2);
+            const pegCoordinates = PegBoard.pegBetween(2, 4, 2, 2);
             expect(pegCoordinates).toEqual({column: 2, row: 3});
         });
 
         it('when origin x is target x and origin y < target y', () => {
-            const pegCoordinates = pegBetween(2, 0, 2, 2);
+            const pegCoordinates = PegBoard.pegBetween(2, 0, 2, 2);
             expect(pegCoordinates).toEqual({column: 2, row: 1});
         });
 
         it('when origin y is target y and origin x > target x', () => {
-            const pegCoordinates = pegBetween(4, 2, 2, 2);
+            const pegCoordinates = PegBoard.pegBetween(4, 2, 2, 2);
             expect(pegCoordinates).toEqual({column: 3, row: 2});
         });
 
         it('when origin y is target y and origin x < target x', () => {
-            const pegCoordinates = pegBetween(0, 2, 2, 2);
+            const pegCoordinates = PegBoard.pegBetween(0, 2, 2, 2);
             expect(pegCoordinates).toEqual({column: 1, row: 2});
         });
     });
@@ -53,10 +52,10 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const neighbors = nextStates(board);
+            const neighbors = new PegBoard(board).nextStates();
             expect(neighbors).toHaveLength(2);
-            expect(neighbors).toContainEqual(expected1);
-            expect(neighbors).toContainEqual(expected2);
+            expect(neighbors[0].data).toEqual(expected1);
+            expect(neighbors[1].data).toEqual(expected2);
         });
 
         it('returns one state for a up to down', () => {
@@ -78,9 +77,9 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const neighbors = nextStates(board);
+            const neighbors = new PegBoard(board).nextStates();
             expect(neighbors).toHaveLength(1);
-            expect(neighbors).toContainEqual(expected);
+            expect(neighbors[0].data).toEqual(expected);
         });
 
         it('returns one state for a down to up', () => {
@@ -102,9 +101,9 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const neighbors = nextStates(board);
+            const neighbors = new PegBoard(board).nextStates();
             expect(neighbors).toHaveLength(1);
-            expect(neighbors).toContainEqual(expected);
+            expect(neighbors[0].data).toEqual(expected);
         });
 
         it('returns two states for the same peg', () => {
@@ -135,10 +134,10 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const neighbors = nextStates(board);
+            const neighbors = new PegBoard(board).nextStates();
             expect(neighbors).toHaveLength(2);
-            expect(neighbors).toContainEqual(expected1);
-            expect(neighbors).toContainEqual(expected2);
+            expect(neighbors[0].data).toEqual(expected1);
+            expect(neighbors[1].data).toEqual(expected2);
         });
     });
 
@@ -162,13 +161,21 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const boardStates = solve(board);
+            const boardStates = new PegBoard(board).solve();
             expect(boardStates).toHaveLength(3);
-            expect(boardStates).toContainEqual(expected);
+            expect(boardStates[2].data).toEqual(expected);
         });
 
         it('should solve the board when there are 17 movements left', () => {
-            const board = boardWith17MovementsLeft();
+            const board = [
+                [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+                [undefined, undefined, 'empty', 'peg', 'peg', undefined, undefined],
+                ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
+                ['peg', 'peg', 'empty', 'peg', 'peg', 'peg', 'peg'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
             const expected = [
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
@@ -178,13 +185,21 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const boardStates = solve(board);
+            const boardStates = new PegBoard(board).solve();
             expect(boardStates).toHaveLength(17);
-            expect(boardStates).toContainEqual(expected);
+            expect(boardStates[16].data).toEqual(expected);
         });
 
         it('should solve the board when there are 20 movements left', () => {
-            const board = boardWith20MovementsLeft();
+            const board = [
+                [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+                [undefined, undefined, 'peg', 'peg', 'peg', undefined, undefined],
+                ['peg', 'peg', 'peg', 'peg', 'empty', 'peg', 'peg'],
+                ['peg', 'peg', 'empty', 'peg', 'peg', 'peg', 'peg'],
+                ['peg', 'peg', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
             const expected = [
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
@@ -194,20 +209,39 @@ describe('board', () => {
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
                 [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
             ];
-            const boardStates = solve(board);
+            const boardStates = new PegBoard(board).solve();
             expect(boardStates).toHaveLength(20);
-            expect(boardStates).toContainEqual(expected);
+            expect(boardStates[19].data).toEqual(expected);
+        });
+    });
+
+    describe('isSolved', () => {
+        it('should return true if the board is solved', () => {
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'peg', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const actual = new PegBoard(board).isSolved();
+            expect(actual).toBe(true);
         });
 
-        it('tests array', () => {
-            const arr = Array();
-            let num = 12;
-            console.log(arr[num]);
-            arr[num]= num;
-            console.log(arr[num]);
-            for (const arrElement of arr) {
-                console.log(arrElement);
-            }
+        it('should return false when the board has more than one peg', () => {
+            const board = [
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'peg', 'peg', 'empty', 'empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+                [undefined, undefined, 'empty', 'empty', 'empty', undefined, undefined],
+            ];
+            const actual = new PegBoard(board).isSolved();
+            expect(actual).toBe(false);
         });
     });
 
@@ -222,22 +256,8 @@ describe('board', () => {
                 [null, null, 'empty', "empty", 'empty', null, null],
                 [null, null, 'empty', "empty", 'empty', null, null],
             ];
-            const boardStates = solve(board);
+            const boardStates = new PegBoard(board).solve();
             expect(boardStates).toHaveLength(0);
-        });
-    });
-
-    describe('pegs count', () => {
-        it('should count the number of pegs in string', () => {
-            const expected = parseInt('110000001000111000', 2);
-            const actual = pegsCount(expected);
-            expect(actual).toBe(6);
-        });
-
-        it('should return zero when no pegs in string', () => {
-            const expected = parseInt('000000000000000000');
-            const actual = pegsCount(expected);
-            expect(actual).toBe(0);
         });
     });
 });
