@@ -39,7 +39,7 @@ $('#hint-btn').on('click', function () {
             $('#hint-label').text('No solution for this board!').fadeIn(1500);
             break;
         case 1:
-            console.log('No solution for this board!');
+            console.log('Board solved!');
             $('#hint-label').text('Board solved!').fadeIn(1500);
             break;
         default:
