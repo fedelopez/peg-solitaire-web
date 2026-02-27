@@ -1,46 +1,42 @@
-import Array from 'collections/shim-array';
-
 export class PegBoard {
-    data;
-
     constructor(data = createBoard()) {
-        this.data = data;
+        this._data = data;
     }
 
     get data() {
-        return data;
+        return this._data;
     }
 
     nextStates() {
         const states = [];
-        const rows = this.data.length;
-        for (let row = 0; row < rows; row++) {
-            const columns = this.data[row].length;
-            for (let column = 0; column < columns; column++) {
-                if (this.data[row][column] === 'peg') {
-                    if (column < columns - 2 && this.data[row][column + 1] === 'peg' && this.data[row][column + 2] === 'empty') {
-                        const newState = this.data.map(row => row.slice());
+        const rowSize = this._data.length;
+        const columnSize = this._data[0].length;
+        for (let row = 0; row < rowSize; row++) {
+            for (let column = 0; column < columnSize; column++) {
+                if (this._data[row][column] === 'peg') {
+                    if (this.canCaptureLeftToRight(row, column, columnSize)) {
+                        const newState = this._data.map(row => row.slice());
                         newState[row][column] = 'empty';
                         newState[row][column + 1] = 'empty';
                         newState[row][column + 2] = 'peg';
                         states.push(new PegBoard(newState));
                     }
-                    if (column > 1 && this.data[row][column - 1] === 'peg' && this.data[row][column - 2] === 'empty') {
-                        const newState = this.data.map(row => row.slice());
+                    if (this.canCaptureRightToLeft(row, column)) {
+                        const newState = this._data.map(row => row.slice());
                         newState[row][column] = 'empty';
                         newState[row][column - 1] = 'empty';
                         newState[row][column - 2] = 'peg';
                         states.push(new PegBoard(newState));
                     }
-                    if (row < rows - 2 && this.data[row + 1][column] === 'peg' && this.data[row + 2][column] === 'empty') {
-                        const newState = this.data.map(row => row.slice());
+                    if (this.canCaptureTopToBottom(row, column, rowSize)) {
+                        const newState = this._data.map(row => row.slice());
                         newState[row][column] = 'empty';
                         newState[row + 1][column] = 'empty';
                         newState[row + 2][column] = 'peg';
                         states.push(new PegBoard(newState));
                     }
-                    if (row > 2 && this.data[row - 1][column] === 'peg' && this.data[row - 2][column] === 'empty') {
-                        const newState = this.data.map(row => row.slice());
+                    if (this.canCaptureBottomToTop(row, column)) {
+                        const newState = this._data.map(row => row.slice());
                         newState[row][column] = 'empty';
                         newState[row - 1][column] = 'empty';
                         newState[row - 2][column] = 'peg';
@@ -52,13 +48,29 @@ export class PegBoard {
         return states;
     }
 
+    canCaptureLeftToRight(row, column, columnSize) {
+        return column + 2 < columnSize && this._data[row][column + 1] === 'peg' && this._data[row][column + 2] === 'empty';
+    }
+
+    canCaptureRightToLeft(row, column) {
+        return column > 1 && this._data[row][column - 1] === 'peg' && this._data[row][column - 2] === 'empty';
+    }
+
+    canCaptureTopToBottom(row, column, rowSize) {
+        return row + 2 < rowSize && this._data[row + 1][column] === 'peg' && this._data[row + 2][column] === 'empty';
+    }
+
+    canCaptureBottomToTop(row, column) {
+        return row > 1 && this._data[row - 1][column] === 'peg' && this._data[row - 2][column] === 'empty';
+    }
+
     updatePeg(peg) {
-        this.data[peg.row][peg.column] = peg.className;
+        this._data[peg.row][peg.column] = peg.className;
     }
 
     isSolved() {
         let pegsLeft = 0;
-        for (const row of this.data) {
+        for (const row of this._data) {
             for (const column of row) {
                 if (column === 'peg') {
                     pegsLeft++;
@@ -99,7 +111,7 @@ export class PegBoard {
     }
 
     toHTML() {
-        return this.data.reduce((acc, values, row) => {
+        return this._data.reduce((acc, values, row) => {
             return acc + values.reduce((acc2, value, column) => {
                 if (!value) return acc2;
                 else {
@@ -129,15 +141,15 @@ export class PegBoard {
 }
 
 class PegBoardCache {
-    visitedBoards = Array();
+    visitedBoards = new Set();
 
     visit(pegBoard) {
         const encodedBoard = this.encode(pegBoard);
-        this.visitedBoards[encodedBoard] = encodedBoard;
+        this.visitedBoards.add(encodedBoard);
     }
 
     hasVisited(pegBoard) {
-        return this.visitedBoards[this.encode(pegBoard)] !== undefined
+        return this.visitedBoards.has(this.encode(pegBoard));
     }
 
     encode(pegBoard) {
@@ -152,7 +164,7 @@ class PegBoardCache {
     }
 
     size() {
-        return this.visitedBoards.length;
+        return this.visitedBoards.size;
     }
 }
 

@@ -10,7 +10,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "collections": "^5.1.13",
     "jquery": "^3.7.0"
   },
   "devDependencies": {
